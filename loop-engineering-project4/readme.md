@@ -108,76 +108,44 @@ Even event-driven loops can benefit from a progress.md spine to remember:
 | **Read-only by default** | Check permissions limited to read/pull-requests:read unless writes needed |
 | **Human gate for writes** | If PR creation or edits needed, add human approval step |
 
-### Running the Loop
+### Running the loop (Python)
 
-**OpenCode (GitHub Actions)**:
-- Install once: `opencode github install` (adds .github/workflows/opencode.yml)
-- The Action reacts to `pull_request` events automatically
-- Each event fires a fresh opencode run inside GitHub Actions runner
-- Reviewer prompt determines what the loop does each time
+This demonstrates the event-driven loop (The Doorbell pattern) using Python:
 
-**Claude Code (Channels)**:
-- Set up a Channel that connects to GitHub webhooks
-- When PR opens, Claude Code session fires automatically
-- Prompt runs review against the new PR
-- Can close session after, or keep alive for more events
+**Prerequisites**: Python 3.x installed
 
-### What Happens When a PR Opens
+**Steps to run**:
 
-1. **Event arrives**: `pull_request opened` on connected repo
-2. **Loop fires**: Fresh opencode run starts in GitHub Actions
-3. **Reads the PR**: Checks out code, reads diff, sees what changed
-4. **Runs reviewer**: Invokes @reviewer subagent with the diff
-5. **Reviewer replies**: `PASS` with what was verified, or `FAIL` with reasons
-6. **Action taken**:
-   - **PASS**: Post review "Great work! No issues found. :white_check_mark:"
-   - **FAIL**: Post review "Here are the issues found:" with specific file:line reasons
-7. **Loop exits**: Goes idle until next event
-8. **You may never know**: Whether laptop was open or shut, the loop reacted
+1. **Install**: Ensure Python is available (`python --version`)
+2. **Run the script**:
+   ```bash
+   python loop_engineering_project4.py
+   ```
+3. **Observe**: The script will:
+   - Start in idle state (no clock running, loop waiting for event)
+   - Simulate a GitHub pull_request event arriving
+   - Fire a fresh loop run to react to the event
+   - Invoke reviewer agent to grade the change
+   - Post PASS review or FAIL review with specific reasons
+   - Update progress.md spine to track reviewed PRs
+   - Exit back to idle state until next event
+   - Can run repeatedly - each iteration simulates a new PR event
 
-### Key Takeaway
+**What happens**:
+- Your value: Designing what the loop does **when** an event arrives
+- Loop's value: Holding the "react → grade → respond" cycle automatically
+- The heartbeat is the event itself (PR opens), not a schedule you manage
+- Idempotent actions - safe to repeat, don't create duplicate reviews
+- Spine (progress.md) tracks reviewed PRs to avoid duplicates
 
-Your value in event-driven loop engineering: designing what the loop does **when** an event arrives, not **how** to start it. The heartbeat is the event itself (PR opens), not a schedule you manage. The loop holds the "react → grade → respond" cycle automatically. You define the prompt/instructions for each event type.
+**To run multiple events**: Run the script - it will process one event then wait for the next.
+Press Ctrl-C to stop.
 
-### When to Use Event-Driven Loops
+### Safety Features for Event-Driven Loops
 
-- ✅ **PR reviews**: Auto-review every PR that opens (this project)
-- ✅ **Issue triage**: Auto-label, assign, or comment on new issues
-- ✅ **Message responses**: Reply to Slack/Discord messages with templates
-- ✅ **Alert responses**: React to CI failures, security alerts, monitoring alerts
-- ❌ **Repetitive maintenance** (daily summaries) - use scheduled loop instead
-- ❌ **Tasks you're actively watching** - use in-session loop instead
-
-### Your Value in This Loop
-
-- **Designed the event response**: What the loop does when PR opens, issue lands, etc.
-- **Wrote the reviewer prompt**: Instructions for PASS/FAIL decisions
-- **Set safety boundaries**: Read-only permissions, idempotent actions, no infinite loops
-- **Received the result**: Auto-review posted on PRs whether you were at your computer or not
-
-### Stop Conditions for Event-Driven
-
-Event-driven loops have unique stop conditions since they run once per event:
-
-1. **Natural stop**: Loop runs once per event, then exits (no infinite loop)
-2. **Idempotency check**: Don't react to same event twice (track reviewed PRs in spine)
-3. **Rate limits**: Respect GitHub API limits - don't flood with reviews
-4. **Human gate for writes**: If loop needs to comment/edit PR, add human approval if risky
-
-### Cleanup
-
-- Loop exits after one event run, goes idle
-- No files permanently modified unless reviewer suggests changes
-- Spine (progress.md) can track reviewed PRs to avoid duplicates
-- Loop is safe to leave running - it does nothing until an event arrives
-
----
-
-**Projects 1-4 complete!**
-
-- **Project 1**: In-session loop (checks while you watch, Concept 4)
-- **Project 2**: Conditional loop (stops when condition met, Concept 5)
-- **Project 3**: Scheduled loop (runs unattended, uses spine, Concept 6+12)
-- **Project 4**: Event-driven (reacts to events, The Doorbell, Concept 7)
-
-Ready for Project 5 (full morning triage-to-PR loop) or any concept review?
+- **No infinite loops**: Loop runs once per event, then exits (goes idle)
+- **Idempotency check**: Track reviewed PRs in spine - don't react to same PR twice
+- **Rate limits**: Respect reasonable limits - process one PR per event cycle
+- **Read-only by default**: Simulated read-only operations unless writes needed
+- **Human gate for writes**: If loop needed to create PRs, human approval step included
+- **Progress.md spine**: Tracks reviewed PRs and failure patterns between runs

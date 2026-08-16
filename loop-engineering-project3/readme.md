@@ -66,67 +66,56 @@ This project demonstrates **Concept 6: Scheduled Loops (Unattended Schedules)** 
 | **Human gate** | Risky or FAIL items go to "needs a human" section, not PR |
 | **Limit** | Max tries per candidate; loop caps overall runs |
 
-### Running the Loop
+### Running the loop (Python)
 
-**Claude Code**: Set up as a Routine on claude.ai, scheduled for weekday 9am
+This demonstrates the scheduled loop with spine using Python:
 
-**OpenCode**: Set up as a GitHub Actions workflow with cron schedule:
+**Prerequisites**: Python 3.x installed
 
-```yaml
-name: morning-maintenance
-on:
-  schedule:
-    - cron: "0 9 * * 1-5"   # weekdays at 9am UTC
-jobs:
-  triage:
-    runs-on: ubuntu-latest
-    permissions: { contents: write, pull-requests: write, issues: write }
-    steps:
-      - uses: actions/checkout@v6
-        with: { persist-credentials: false }
-      - uses: anomalyco/opencode/github@latest
-        env: { ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} }
-        with:
-          model: anthropic/claude-sonnet-5
-          prompt: |
-            Run the daily-triage skill.
-            Read progress.md first; update it last.
-            For each candidate fix: draft it on a new branch, then invoke the
-            @reviewer subagent to grade it. Open a PR only when the reviewer
-            replies PASS. Append anything risky to the "needs a human" section
-            of progress.md and leave it for the maintainer.
+**Steps to run**:
+
+1. **Install**: Ensure Python is available (`python --version`)
+2. **Run the script**:
+   ```bash
+   python loop_engineering_project3.py
+   ```
+3. **Observe**: The script will:
+   - Load progress.md spine (memory from previous runs)
+   - Simulate morning CI triage (find overnight failures)
+   - Draft fixes and invoke reviewer agent (maker-checker split)
+   - Open PRs for safe fixes (PASS + low risk)
+   - Flag risky/FAIL items to "needs a human" section
+   - Save progress.md spine for tomorrow's run
+   - Stop after one run (simulating scheduled 9am heartbeat)
+
+**What happens**:
+- Your value: Designing the loop structure (heartbeat, spine, maker-checker, connector)
+- Loop's value: Finding work, drafting fixes, checking, and shipping safe PRs automatically
+- Spine (progress.md) remembers between runs - tomorrow's run picks up where today stopped
+- Max 5 PRs per run safety cap
+- Human gate: Risky or FAIL items go to "needs a human" section
+
+**To simulate multiple runs**: Run the script multiple times - each run reads the progress.md spine and picks up where the previous run stopped.
+
+### Spine (progress.md) Format
+
+The progress.md file survives between runs and serves as the loop's memory:
+
+```
+## Done
+- 2026-06-22: fixed flaky test in test/auth (retry on token refresh)
+
+## In progress
+- Dependency audit: 3 of 7 advisories patched; lodash bump blocked by an API change
+
+## Open / needs a human
+- CVE-2026-xxxx in image lib — the fix changes the output format, escalating to a maintainer
 ```
 
-### What You Wake Up To
+### Safety Features Demonstrated
 
-After the loop runs unattended overnight:
-
-- **Two PRs** opened for safe fixes (PASS from reviewer)
-- **One flagged item** in "needs a human" section (FAIL or risky change)
-- **You typed nothing** - the loop handled everything from finding work to opening PRs
-- **Read progress.md** at human gate to review what the loop did
-
-### Key Takeaway
-
-Your value in loop engineering moves from guiding every agent turn to designing the loop structure. The scheduled heartbeat starts each beat automatically; the spine (progress.md) remembers between runs; the loop handles finding work, drafting fixes, checking, and shipping safe PRs. You only make the one call that needs a person at the human gate.
-
-### When to Use Scheduled Loops
-
-- ✅ Tasks that must run while you sleep (CI triage, dependency checks, etc.)
-- ✅ Repetitive maintenance work (daily/weekly summaries, audits, etc.)
-- ❌ Tasks you're actively watching (use in-session loop instead)
-- ❌ Tasks that need immediate human reaction (use event-driven loop instead)
-
-### Your Value in This Loop
-
-- **Designed the loop structure**: heartbeat, spine, maker-checker, connector
-- **Set the stop conditions**: success condition, limit, human gate
-- **Defined the intent**: "sort overnight CI, ship safe fixes, flag risky ones"
-- **Received the result**: Two PRs and one flagged item waiting in progress.md
-
-### Stop Conditions Hierarchy
-
-1. **Success condition**: PASS from reviewer + low risk (no public API change, no data migration, no file deletion)
-2. **Limit**: Max 5 PRs per run, max tries per candidate
-3. **Human gate**: Risky or FAIL items go to "needs a human" - person decides later
-4. **No-progress check**: Stops if agent repeats same action with same arguments
+- **Max 5 PRs per run**: Loop stops after 5 PRs even if more candidates exist
+- **claude/* branch prefix**: Only claude/* branches (simulated)
+- **Success condition**: PASS + low risk (no API change, no data migration, no file deletion)
+- **Human gate**: Risky or FAIL items → "needs a human" section - person decides later
+- **Spine memory**: progress.md survives between runs; without it, loop repeats first step forever

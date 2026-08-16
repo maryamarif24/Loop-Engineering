@@ -34,12 +34,36 @@ This project demonstrates **Concept 5: Conditional Loops (Run-Until-Done)** from
 - **No-progress check**: Stops if agent repeats same action with same arguments
 - **Always cap the tries**: Every loop needs three stops (success condition, limit, no-progress)
 
-### Running the loop
+### Running the loop (Python)
 
-This demonstrates the conditional loop pattern:
-- **Your value**: Designing the stop condition ("tests must pass")
-- **Loop's value**: Repeatedly trying, checking, and stopping when condition met
-- **Checker value**: Tests and linter prove the work is actually fine (command cannot convince itself)
+This demonstrates the conditional loop pattern using Python:
+
+**Prerequisites**: Python 3.x installed
+
+**Steps to run**:
+
+1. **Install**: Ensure Python is available (`python --version`)
+2. **Run the script**:
+   ```bash
+   python loop_engineering_project2.py
+   ```
+3. **Observe**: The script will:
+   - Simulate a test suite that passes after N attempts
+   - Run the conditional loop that retries tests
+   - Stop automatically when tests pass (success condition)
+   - Stop if max tries cap is reached (safety limit)
+   - Stop if no progress is detected (prevents infinite retry)
+
+**What happens**:
+- Your value: Designing the stop condition ("tests must pass")
+- Loop's value: Repeatedly trying, checking, and stopping when condition met
+- Safety caps ensure loop cannot run indefinitely
+
+### Safety Features Demonstrated
+
+- **Max tries cap**: Loop stops after 8 attempts even if tests don't pass
+- **No-progress check**: Stops if agent repeats same action with same arguments
+- **Three guards**: Success condition, limit, no-progress - every loop needs all three
 
 ### Stop Conditions (the three guards)
 

@@ -15,6 +15,7 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **What it does**: Polls for task completion (output file exists), reports when done
 - **Heartbeat type**: In-session (stops when session closes)
 - **Safety**: Success condition (file exists = done), manual cleanup possible
+- **Python script**: `loop_engineering_project1.py` - demonstrates the loop pattern in Python
 
 ### Project 2: Conditional Loop (Concept 5)
 **Folder**: `loop-engineering-project2/`
@@ -23,6 +24,7 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **What it does**: Agent drafts fix → loop runs tests → checker decides PASS/FAIL → stops on PASS
 - **Safety stops**: Success condition, limit (max tries), no-progress check
 - **When to use**: Task ends and a command can prove the end condition
+- **Python script**: `loop_engineering_project2.py` - demonstrates conditional loop in Python
 
 ### Project 3: Scheduled Loop with Spine (Concepts 6 + 12)
 **Folder**: `loop-engineering-project3/`
@@ -33,6 +35,7 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **Spine**: progress.md - survives between runs, model forgets everything between runs
 - **Safety**: Max 5 PRs per run, claude/* branch prefix, human gate for risky items
 - **When to use**: Tasks that must run while you sleep (CI triage, dependency checks, daily summaries)
+- **Python script**: `loop_engineering_project3.py` - demonstrates scheduled loop with spine in Python
 
 ### Project 4: Event-Driven "The Doorbell" (Concept 7)
 **Folder**: `loop-engineering-project4/`
@@ -41,6 +44,7 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **What it does**: Listens for GitHub pull_request events, runs reviewer agent, posts PASS/FAIL review
 - **Heartbeat type**: Event-driven (reacts when something arrives, no clock)
 - **When to use**: PR reviews, issue triage, message responses, alert reactions
+- **Python script**: `loop_engineering_project4.py` - demonstrates event-driven loop in Python
 
 ## Course Concepts Covered
 
@@ -67,9 +71,13 @@ Every loop in this repository follows the same six-part anatomy:
 Each project can be experienced conceptually by reading the `readme.md` file in its folder. For practical execution:
 
 - **Project 1**: Demonstrates the simplest loop pattern - check → wait → check → wait → stop
+  - Run: `python loop_engineering_project1.py`
 - **Project 2**: Shows conditional loops with safety caps (max tries, no-progress check)
+  - Run: `python loop_engineering_project2.py`
 - **Project 3**: Requires setup of scheduled heartbeat (Claude Code Routines or OpenCode cron/GitHub Actions) and spine (progress.md)
+  - Run: `python loop_engineering_project3.py`
 - **Project 4**: Requires GitHub integration (opencode github install) and event triggers
+  - Run: `python loop_engineering_project4.py`
 
 ## Your Value in Loop Engineering
 
