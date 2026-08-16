@@ -17,6 +17,16 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **Safety**: Success condition (file exists = done), manual cleanup possible
 - **Python script**: `loop_engineering_project1.py` - demonstrates the loop pattern in Python
 
+### Project 5: Full Morning Triage-to-PR Loop (Combining All Concepts)
+**Folder**: `loop-engineering-project5/`
+- **Demonstrates**: Integrated loop combining all concepts from Projects 1-4
+- **Key concept**: Full morning triage-to-PR loop with spine memory across runs
+- **What it does**: Combines in-session, conditional, scheduled with spine, and event-driven loops into one workflow
+- **Heartbeat type**: Hybrid (scheduled 9am + event-driven between runs)
+- **Safety**: Spine (progress.md) memory, max PRs per run, human gate, max tries cap
+- **Python script**: `loop_engineering_project5.py` - demonstrates the full integrated loop in Python
+- **Combines**: Project 1 (in-session) + Project 2 (conditional) + Project 3 (scheduled + spine) + Project 4 (event-driven)
+
 ### Project 2: Conditional Loop (Concept 5)
 **Folder**: `loop-engineering-project2/`
 - **Demonstrates**: Conditional loops (run-until-done) that stop when a condition becomes true
@@ -78,6 +88,8 @@ Each project can be experienced conceptually by reading the `readme.md` file in 
   - Run: `python loop_engineering_project3.py`
 - **Project 4**: Requires GitHub integration (opencode github install) and event triggers
   - Run: `python loop_engineering_project4.py`
+- **Project 5**: Full morning triage-to-PR loop combining all concepts
+  - Run: `python loop_engineering_project5.py`
 
 ## Your Value in Loop Engineering
 
@@ -115,13 +127,14 @@ README.md                     # This file - overview of all projects
 
 ## Next Steps
 
-After completing Projects 1-4, you can:
+After completing Projects 1-5, you can:
 
-1. **Continue to Project 5**: Full morning triage-to-PR loop combining all concepts
-2. **Deepen your understanding**: Review the "deeper notes" in the course (Parts 5-6, Routines appendix)
-3. **Build more loops**: Practice projects 5-8 for increasing difficulty
-4. **Explore Routines**: Configure cloud scheduled automations using the Routines appendix
-5. **Graph engineering**: After this course, explore graph engineering for multiple looping systems
+1. **Deepen your understanding**: Review the "deeper notes" in the course (Parts 5-6, Routines appendix)
+2. **Build more loops**: Practice projects 5-8 for increasing difficulty
+3. **Explore Routines**: Configure cloud scheduled automations using the Routines appendix
+4. **Graph engineering**: After this course, explore graph engineering for multiple looping systems
+
+**Or restart the cycle**: Projects 1-5 cover the core loop engineering concepts; after completing all 5, you can restart with advanced practice, deeper notes, or build custom loops for your own use cases.
 
 ---
 
