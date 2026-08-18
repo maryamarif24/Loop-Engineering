@@ -1,10 +1,10 @@
 # Loop Engineering: Projects Repository
 
-This repository contains all 4 practice projects from the "Loop Engineering: A Crash Course" learning journey. Each project demonstrates a different concept of loop engineering, building from simple in-session loops to fully unattended scheduled loops.
+This repository contains all 12 practice projects from the "Loop Engineering: A Crash Course" learning journey. Each project demonstrates a different concept of loop engineering, building from simple in-session loops to fully unattended scheduled loops with priority handling, retry logic, validation, and rate limiting.
 
 ## Overview
 
-The course teaches loop engineering as the skill of designing systems that run on their own, moving from guiding every agent turn to designing loops with heartbeats, spines, maker-checker splits, and other components. Each project implements one or more concepts from the course.
+The course teaches loop engineering as the skill of designing systems that run on their own, moving from guiding every agent turn to designing loops with heartbeats, spines, maker-checker splits, priority Queues, validation, and rate limiting. Each project implements one or more concepts from the course.
 
 ## Projects Summary
 
@@ -16,16 +16,6 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **Heartbeat type**: In-session (stops when session closes)
 - **Safety**: Success condition (file exists = done), manual cleanup possible
 - **Python script**: `loop_engineering_project1.py` - demonstrates the loop pattern in Python
-
-### Project 5: Full Morning Triage-to-PR Loop (Combining All Concepts)
-**Folder**: `loop-engineering-project5/`
-- **Demonstrates**: Integrated loop combining all concepts from Projects 1-4
-- **Key concept**: Full morning triage-to-PR loop with spine memory across runs
-- **What it does**: Combines in-session, conditional, scheduled with spine, and event-driven loops into one workflow
-- **Heartbeat type**: Hybrid (scheduled 9am + event-driven between runs)
-- **Safety**: Spine (progress.md) memory, max PRs per run, human gate, max tries cap
-- **Python script**: `loop_engineering_project5.py` - demonstrates the full integrated loop in Python
-- **Combines**: Project 1 (in-session) + Project 2 (conditional) + Project 3 (scheduled + spine) + Project 4 (event-driven)
 
 ### Project 2: Conditional Loop (Concept 5)
 **Folder**: `loop-engineering-project2/`
@@ -55,6 +45,52 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **Heartbeat type**: Event-driven (reacts when something arrives, no clock)
 - **When to use**: PR reviews, issue triage, message responses, alert reactions
 - **Python script**: `loop_engineering_project4.py` - demonstrates event-driven loop in Python
+
+### Project 5: Full Morning Triage-to-PR Loop (Combining All Concepts)
+**Folder**: `loop-engineering-project5/`
+- **Demonstrates**: Integrated loop combining all concepts from Projects 1-4
+- **Key concept**: Full morning triage-to-PR loop with spine memory across runs
+- **What it does**: Combines in-session, conditional, scheduled with spine, and event-driven loops into one workflow
+- **Heartbeat type**: Hybrid (scheduled 9am + event-driven between runs)
+- **Safety**: Spine (progress.md) memory, max PRs per run, human gate, max tries cap
+- **Python script**: `loop_engineering_project5.py` - demonstrates the full integrated loop in Python
+- **Combines**: Project 1 (in-session) + Project 2 (conditional) + Project 3 (scheduled + spine) + Project 4 (event-driven)
+
+### Project 6: Deep Dive - Graph State Loops
+**Folder**: `loop-engineering-project6/`
+- **Demonstrates**: Loops that manage graph-structured state across runs
+- **Key concept**: Loop processes nodes and edges in a graph, with spine memory tracking traversal progress
+- **What it does**: Iterates through dependency graphs, tracks visited nodes, handles circular dependencies
+- **Heartbeat type**: In-session with graph state persistence
+- **Safety**: Max nodes per run, cycle detection, spine memory reset
+- **Python script**: `loop_engineering_project6.py` - demonstrates graph state loop in Python
+
+### Project 7: Deep Dive - Nested Loop Patterns
+**Folder**: `loop-engineering-project7/`
+- **Demonstrates**: Loops within loops (nested patterns) for complex processing
+- **Key concept**: Outer loop drives inner loops, with spine memory coordinating between levels
+- **What it does**: Outer loop processes batches, inner loops process items within each batch with their own priorities
+- **Heartbeat type**: In-session with nested spine tracking
+- **Safety**: Max inner iterations, outer loop progress caps, no-progress detection
+- **Python script**: `loop_engineering_project7.py` - demonstrates nested loop patterns in Python
+
+### Project 8: Deep Dime - Event-Channel Loops
+**Folder**: `loop-engineering-project8/`
+- **Demonstrates**: Loops that process events from a channel with ordering guarantees
+- **Key concept**: Loop reads from an event channel, processes each event with priority, acknowledges completion
+- **What it does**: Consumes events from a queue, processes by priority level, tracks acknowledgment in spine
+- **Heartbeat type**: Event-driven with channel ordering
+- **Safety**: Max events per run, dead-letter handling, spine tracking of processed offsets
+- **Python script**: `loop_engineering_project8.py` - demonstrates event-channel loop in Python
+
+### Project 9: Priority Queue Loop (Concept 11)
+**Folder**: `loop-engineering-project9/`
+- **Demonstrates**: Priority-queue loops that sort items by priority level before processing
+- **Key concept**: Loop uses priority ordering to determine processing sequence (high → medium → low), with spine memory for progress between runs
+- **What it does**: Loads queue state from progress.md spine, identifies remaining items, sorts by priority, processes in priority order, caps per run, updates spine
+- **Heartbeat type**: In-session (stops when session closes)
+- **SUCCESS**: Success condition (file exists = done), manual cleanup possible
+- **Python script**: `loop_engineering_project9.py` - demonstrates priority queue loop in Python
 
 ### Project 10: Retry Queue Loop (Concept 10)
 **Folder**: `loop-engineering-project10/`
@@ -91,6 +127,11 @@ The course teaches loop engineering as the skill of designing systems that run o
 | 2 | 5 | Conditional loops, run-until-done, stop conditions |
 | 3 | 6 + 12 | Scheduled loops, spine (memory between runs) |
 | 4 | 7 | Event-driven loops, The Doorbell pattern |
+| 5 | 1 + 2 + 3 + 4 | Integrated loop combining all concepts |
+| 6 | 8 + 9 | Graph state loops, dependency processing |
+| 7 | 10 + 11 | Nested loop patterns, inner/outer coordination |
+| 8 | 12 + 13 | Event-channel loops, ordered event processing |
+| 9 | 11 | Priority-queue loops, sorted processing |
 | 10 | 10 | Retry queue loops, transient failure handling |
 | 11 | 13 | Validation queue loops, processing + verification |
 | 12 | 14 | Rate-limited queue loops, sustainable pacing |
@@ -100,7 +141,7 @@ The course teaches loop engineering as the skill of designing systems that run o
 Every loop in this repository follows the same six-part anatomy:
 
 1. **Heartbeat** - What starts each beat (schedule, event, or timer)
-2. **Worktree** - Isolation so parallel agents don't collide (Projects 3-4)
+2. **Worktree** - Isolation so parallel agents don't collide (Projects 3-4, 6-8)
 3. **Skill** - Project knowledge written once, loaded each run
 4. **Subagents** - Maker-checker split (separate creator and reviewer)
 5. **Connector** - MCP to act in real tools (open PRs, update tickets)
@@ -120,6 +161,14 @@ Each project can be experienced conceptually by reading the `readme.md` file in 
   - Run: `python loop_engineering_project4.py`
 - **Project 5**: Full morning triage-to-PR loop combining all concepts
   - Run: `python loop_engineering_project5.py`
+- **Project 6**: Graph state loop with dependency processing
+  - Run: `python loop_engineering_project6.py`
+- **Project 7**: Nested loop patterns with inner/outer coordination
+  - Run: `python loop_engineering_project7.py`
+- **Project 8**: Event-channel loop with ordering guarantees
+  - Run: `python loop_engineering_project8.py`
+- **Project 9**: Priority queue loop with sorted processing
+  - Run: `python loop_engineering_project9.py`
 - **Project 10**: Retry queue loop with retry logic and spine memory
   - Run: `python loop_engineering_project10.py`
 - **Project 11**: Validation queue loop with retry and validation logic
@@ -158,43 +207,66 @@ loop-engineering-project4/    # Project 4: Event-Driven (Concept 7)
 ├── agents.md
 └── readme.md
 
+loop-engineering-project5/    # Project 5: Integrated Loop (All Concepts)
+├── agents.md
+├── readme.md
+└── loop-files.md
+
+loop-engineering-project6/    # Project 6: Graph State Loops
+├── agents.md
+├── readme.md
+└── loop-files.md
+
+loop-engineering-project7/    # Project 7: Nested Loop Patterns
+├── agents.md
+├── readme.md
+└── loop-files.md
+
+loop-engineering-project8/    # Project 8: Event-Channel Loops
+├── agents.md
+├── readme.md
+└── loop-files.md
+
+loop-engineering-project9/    # Project 9: Priority Queue Loop (Concept 11)
+├── agents.md
+├── loop-files.md
+├── progress.md
+└── readme.md
+
 loop-engineering-project10/   # Project 10: Retry Queue Loop (Concept 10)
 ├── agents.md
 ├── loop-files.md
 ├── progress.md
 └── readme.md
-  loop_engineering_project10.py
 
 loop-engineering-project11/   # Project 11: Validation Queue Loop (Concept 13)
 ├── agents.md
 ├── loop-files.md
 ├── progress.md
 └── readme.md
-  loop_engineering_project11.py
 
 loop-engineering-project12/   # Project 12: Rate-Limited Queue Loop (Concept 14)
 ├── agents.md
 ├── loop-files.md
 ├── progress.md
 └── readme.md
-  loop_engineering_project12.py
 
 README.md                     # This file - overview of all projects
 ```
 
 ## Next Steps
 
-After completing Projects 1-5, you can:
+After completing Projects 1-12, you can:
 
-1. **Deepen your understanding**: Review the "deeper notes" in the course (Parts 5-6, Routines appendix)
-2. **Build more loops**: Practice projects 5-8 for increasing difficulty
+1. **Deepen your understanding**: Review the "deeper notes" in the course (Parts 5-6, Routines appendix, Graph engineering appendix)
+2. **Build custom loops**: Practice creating loops for your own use cases - CI triage, dependency checks, daily summaries, PR triage
 3. **Explore Routines**: Configure cloud scheduled automations using the Routines appendix
-4. **Graph engineering**: After this course, explore graph engineering for multiple looping systems
-5. **Projects 10-12**: Practice retry, validation, and rate-limited loops for resilient and sustainable workflows
+4. **Graph engineering**: After this course, explore graph engineering for multiple looping systems and graph state management
+5. **Hibernate loops**: Design loops that can run unattended for extended periods (weeks, months) with proper spine management
 
-**Or restart the cycle**: Projects 1-5 cover the core loop engineering concepts; after completing all 5, you can restart with advanced practice, deeper notes, or build custom loops for your own use cases.
+**Or restart the cycle**: Projects 1-12 cover the full spectrum of loop engineering concepts; after completing all 12, you can restart with advanced practice, deeper notes, or build custom loops for your own use cases.
 
 ---
 
 **Repository**: https://github.com/maryamarif24/Loop-Engineering.git
-**Last updated**: All 12 projects from Loop Engineering: A Crash Course (Projects 10-12 added)
+**Last updated**: All 12 projects from Loop Engineering: A Crash Course (sequential update with Projects 5-12)
