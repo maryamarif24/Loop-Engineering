@@ -56,6 +56,33 @@ The course teaches loop engineering as the skill of designing systems that run o
 - **When to use**: PR reviews, issue triage, message responses, alert reactions
 - **Python script**: `loop_engineering_project4.py` - demonstrates event-driven loop in Python
 
+### Project 10: Retry Queue Loop (Concept 10)
+**Folder**: `loop-engineering-project10/`
+- **Demonstrates**: Priority-queue loops with retry logic that handles transient failures
+- **Key concept**: Loop processes items by priority (high → medium → low), retries failures up to MAX_RETRIES, and remembers progress via spine (progress.md) between runs
+- **What it does**: Sorts items by priority, processes in priority order with retry logic, caps items per run, updates spine with completed/failed state
+- **Heartbeat type**: In-session (stops when task completes or max retries exhausted)
+- **Safety**: Success condition, limit (max tries per item), no-progress check
+- **Python script**: `loop_engineering_project10.py` - demonstrates retry queue loop in Python
+
+### Project 11: Validation Queue Loop (Concept 13)
+**Folder**: `loop-engineering-project11/`
+- **Demonstrates**: Priority-queue loops with retry and validation logic that confirms processing correctness
+- **Key concept**: Loop processes items by priority, retries failures, then validates processed results, and remembers spine state between runs
+- **What it does**: Sorts items by priority, processes with retries, validates outcomes, tracks completed/failed/validated items in spine
+- **Heartbeat type**: In-session (stops when task completes with validation)
+- **Safety**: Success condition, limit (max tries per item), validation pass/fail check
+- **Python script**: `loop_engineering_project11.py` - demonstrates validation queue loop in Python
+
+### Project 12: Rate-Limited Queue Loop (Concept 14)
+**Folder**: `loop-engineering-project12/`
+- **Demonstrates**: Priority-queue loops with rate limiting (max items per run cycle) for sustainable pacing
+- **Key concept**: Loop processes items by priority but caps processing at a set number per run cycle, resetting each new run to prevent burnout
+- **What it does**: Sorts items by priority, processes up to rate limit per run, updates spine with completed state, rate limit resets each cycle
+- **Heartbeat type**: In-session (stops when task completes or rate limit reached)
+- **Safety**: Rate limit cap per run cycle, success condition, manual cleanup possible
+- **Python script**: `loop_engineering_project12.py` - demonstrates rate-limited queue loop in Python
+
 ## Course Concepts Covered
 
 | Project | Concept(s) | Key Learning |
@@ -64,6 +91,9 @@ The course teaches loop engineering as the skill of designing systems that run o
 | 2 | 5 | Conditional loops, run-until-done, stop conditions |
 | 3 | 6 + 12 | Scheduled loops, spine (memory between runs) |
 | 4 | 7 | Event-driven loops, The Doorbell pattern |
+| 10 | 10 | Retry queue loops, transient failure handling |
+| 11 | 13 | Validation queue loops, processing + verification |
+| 12 | 14 | Rate-limited queue loops, sustainable pacing |
 
 ## Core Loop Shape (All Projects)
 
@@ -90,6 +120,12 @@ Each project can be experienced conceptually by reading the `readme.md` file in 
   - Run: `python loop_engineering_project4.py`
 - **Project 5**: Full morning triage-to-PR loop combining all concepts
   - Run: `python loop_engineering_project5.py`
+- **Project 10**: Retry queue loop with retry logic and spine memory
+  - Run: `python loop_engineering_project10.py`
+- **Project 11**: Validation queue loop with retry and validation logic
+  - Run: `python loop_engineering_project11.py`
+- **Project 12**: Rate-limited queue loop with per-run caps for sustainable pacing
+  - Run: `python loop_engineering_project12.py`
 
 ## Your Value in Loop Engineering
 
@@ -122,6 +158,27 @@ loop-engineering-project4/    # Project 4: Event-Driven (Concept 7)
 ├── agents.md
 └── readme.md
 
+loop-engineering-project10/   # Project 10: Retry Queue Loop (Concept 10)
+├── agents.md
+├── loop-files.md
+├── progress.md
+└── readme.md
+  loop_engineering_project10.py
+
+loop-engineering-project11/   # Project 11: Validation Queue Loop (Concept 13)
+├── agents.md
+├── loop-files.md
+├── progress.md
+└── readme.md
+  loop_engineering_project11.py
+
+loop-engineering-project12/   # Project 12: Rate-Limited Queue Loop (Concept 14)
+├── agents.md
+├── loop-files.md
+├── progress.md
+└── readme.md
+  loop_engineering_project12.py
+
 README.md                     # This file - overview of all projects
 ```
 
@@ -133,10 +190,11 @@ After completing Projects 1-5, you can:
 2. **Build more loops**: Practice projects 5-8 for increasing difficulty
 3. **Explore Routines**: Configure cloud scheduled automations using the Routines appendix
 4. **Graph engineering**: After this course, explore graph engineering for multiple looping systems
+5. **Projects 10-12**: Practice retry, validation, and rate-limited loops for resilient and sustainable workflows
 
 **Or restart the cycle**: Projects 1-5 cover the core loop engineering concepts; after completing all 5, you can restart with advanced practice, deeper notes, or build custom loops for your own use cases.
 
 ---
 
 **Repository**: https://github.com/maryamarif24/Loop-Engineering.git
-**Last updated**: All 4 projects from Loop Engineering: A Crash Course
+**Last updated**: All 12 projects from Loop Engineering: A Crash Course (Projects 10-12 added)
